@@ -10,15 +10,16 @@ huffzip: $(OPTH)/huffzip.o \
 		 $(OPTH)/create_code_table.o \
 		 $(OPTH)/delete_tree.o \
 		 $(OPTH)/print_tree_preorder.o
-	g++ $(CFLAGS) -o huffzip  $(OPTH)/huffzip.o \
-							  $(OPTH)/compress.o \
-							  $(OPTH)/decompress.o \
-							  $(OPTH)/write_outfile.o \
-							  $(OPTH)/count_frequency.o \
-							  $(OPTH)/build_tree.o \
-							  $(OPTH)/create_code_table.o \
-							  $(OPTH)/delete_tree.o \
-							  $(OPTH)/print_tree_preorder.o
+	g++ $(CFLAGS) -o huffzip \
+					 $(OPTH)/huffzip.o \
+					 $(OPTH)/compress.o \
+					 $(OPTH)/decompress.o \
+					 $(OPTH)/write_outfile.o \
+					 $(OPTH)/count_frequency.o \
+					 $(OPTH)/build_tree.o \
+					 $(OPTH)/create_code_table.o \
+					 $(OPTH)/delete_tree.o \
+					 $(OPTH)/print_tree_preorder.o
 
 $(OPTH)/huffzip.o: $(SPTH)/huffzip.cpp $(SPTH)/huffzip.h
 	g++ -c $(SPTH)/huffzip.cpp

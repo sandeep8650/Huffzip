@@ -10,9 +10,11 @@ using namespace std;
 
 #define TABLE_SIZE 256
 
+typedef unsigned int f_type;
+
 struct node{
 	unsigned byte;
-	unsigned short freq;
+	f_type freq;
 	struct node *left;
 	struct node *right;
 };
@@ -56,14 +58,14 @@ struct buffer{
 #define NODE_INIT(name,b,f,l,r) \
 	name->byte=b;name->freq=f;name->left=l;name->right=r
 	
-int compress(char *filename);
+float compress(char *filename);
 int decompress(char *filename);
 int print_tree_preorder(struct node *ptr);
-int write_outfile(char *filename,unsigned short *freq,struct huffcode *codeTable,struct node *root);
+f_type write_outfile(char *filename,f_type *freq,struct huffcode *codeTable,struct node *root);
 void create_code_table(struct huffcode *codeTable,struct node *root);
 void write_code_table(struct huffcode *codeTable,struct node *ptr,bitset<TABLE_SIZE> *c,int l);
-int count_frequency(unsigned short *freq, const char *filename);
-struct node* build_tree(unsigned short *freq);
+f_type count_frequency(f_type *freq, const char *filename);
+struct node* build_tree(f_type *freq);
 void delete_tree(struct node **ptr);
 
 

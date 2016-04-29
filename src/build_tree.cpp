@@ -5,10 +5,11 @@
  *******************************************
  */
 #include<cstdlib>
+#include<cstdio>
 #include<queue>
 #include"huffzip.h"
 
-struct node* build_tree(unsigned short *freq){
+struct node* build_tree(f_type *freq){
 	priority_queue<struct node*, vector<struct node*>, compare> pq;
 	int qsize;
 	NODE_PTR(newnode);
@@ -17,6 +18,7 @@ struct node* build_tree(unsigned short *freq){
 	for(int i=0;i<TABLE_SIZE;i++){
 		if(freq[i]){
 			NEW_NODE(newnode);
+			if(newnode==NULL){printf("Failed to allocate memory\n");break;}
 			NODE_INIT(newnode,i,freq[i],NULL,NULL);
 			pq.push(newnode);
 		}

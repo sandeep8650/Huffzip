@@ -5,13 +5,15 @@
  *******************************************
  */
 #include<cstdio>
-#include<iostream>
 #include"huffzip.h"
 
-int compress(char *filename){
-	unsigned short freq[TABLE_SIZE];
-	struct huffcode codeTable[256];
-	count_frequency(freq,filename);
+float compress(char *filename){
+	f_type freq[TABLE_SIZE];
+	f_type total_bytes,written_bytes;
+	float com_ratio;
+	struct huffcode codeTable[TABLE_SIZE];
+	total_bytes=count_frequency(freq,filename);//return total number of bytes
+	if(!total_bytes){return 0;}
 	TREE_INIT(root);
 	root = build_tree(freq);
 //	for(int i=0;i<TABLE_SIZE;i++){
@@ -21,7 +23,8 @@ int compress(char *filename){
 //	for(int i=0;i<256;i++){
 //		cout<<"codeTable["<<i<<"].code="<<codeTable[i].code<<" "<<"codeTable["<<i<<"].length="<<codeTable[i].length<<endl;
 //	}
-	write_outfile(filename,freq,codeTable,root);
+	written_bytes=write_outfile(filename,freq,codeTable,root);
+	if(!written_bytes){delete_tree(&root);return 0;}
 	delete_tree(&root);
-	return 0;
+	return (float)written_bytes/total_bytes;
 }

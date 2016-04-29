@@ -15,12 +15,12 @@ int decompress(char *filename){
 	TREE_INIT(root);
 	NODE_PTR(ptr);
 	string outfilename=string(filename)+"d";
-	unsigned short freq[TABLE_SIZE]={0};
+	f_type freq[TABLE_SIZE]={0};
 	FILE *infile=fopen(filename,"rb");
 	if(infile==NULL){return 0;}
 	FILE *outfile=fopen(outfilename.c_str(),"wb");
 	if(outfile==NULL){fclose(infile);return 1;}
-	fread(freq,sizeof(unsigned short),TABLE_SIZE,infile);
+	fread(freq,sizeof(f_type),TABLE_SIZE,infile);
 //	for(int i=0;i<TABLE_SIZE;i++){
 //		printf("freq[%d]=%u\n",i,freq[i]);
 //	}

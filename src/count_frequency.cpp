@@ -14,15 +14,17 @@
  * @freq: array of type unsigned of size 256
  * @filename: char* to name of file in which characters to be count
  */
-int count_frequency(unsigned short *freq, const char *filename){
+f_type count_frequency(f_type *freq, const char *filename){
+	f_type total_bytes=0;
 	FILE *infile = fopen(filename,"rb");
 	if(!infile){ return 0;}
-	memset(freq,0,sizeof(unsigned short)*TABLE_SIZE);
+	memset(freq,0,sizeof(f_type)*TABLE_SIZE);
 	unsigned byte;
 	while( (byte=fgetc(infile))!=EOF ){
 		freq[byte]++;
+		total_bytes++;
 	}
 	fclose(infile);
 	infile=NULL;
-	return 1;
+	return total_bytes;
 }
