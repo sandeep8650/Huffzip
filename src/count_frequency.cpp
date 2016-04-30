@@ -6,6 +6,7 @@
  */
 #include<cstdio>
 #include<cstring>
+#include<cerrno>
 #include"huffzip.h"
 
 /* function for counting frequency of characters
@@ -17,7 +18,10 @@
 f_type count_frequency(f_type *freq, const char *filename){
 	f_type total_bytes=0;
 	FILE *infile = fopen(filename,"rb");
-	if(!infile){ return 0;}
+	if(!infile){
+		printf("Source file opening error: %s\n",strerror(errno));
+		return 0;
+	}
 	memset(freq,0,sizeof(f_type)*TABLE_SIZE);
 	unsigned byte;
 	while( (byte=fgetc(infile))!=EOF ){

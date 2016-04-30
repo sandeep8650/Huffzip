@@ -34,6 +34,9 @@ struct buffer{
 	int top;
 };
 
+/*extension name*/
+const string extension=".hzip";
+
 /* macro to initialise empty huffman tree
  * @name: name of tree
  */

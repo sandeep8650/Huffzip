@@ -6,6 +6,8 @@
  */
 #include<cstdio>
 #include<cstring>
+#include<cerrno>
+#include<string>
 #include"huffzip.h"
 
 f_type write_outfile(char *filename,f_type *freq,struct huffcode *codeTable,struct node *root){
@@ -13,13 +15,22 @@ f_type write_outfile(char *filename,f_type *freq,struct huffcode *codeTable,stru
 	NODE_PTR(ptr);
 	struct buffer buff={0,-1};
 	unsigned b;
-	char outfilename[100];
-	strcpy(outfilename,filename);
-	strcat(outfilename,".hzip");
+	string outfilename=string(filename) + extension;
 	FILE *infile=fopen(filename,"rb");
-	if(infile==NULL){return 0;}
-	FILE *outfile=fopen(outfilename,"wb");
-	if(outfile==NULL){ fclose(infile);return 0;}
+	if(!infile){
+		printf("Source file opening error: %s\n",strerror(errno));
+		return 0;
+	}
+	FILE *outfile=fopen(outfilename.c_str(),"wbx");
+	for(int i=1;i<=5 && !outfile;i++){
+		outfilename.insert(outfilename.begin()+outfilename.find_last_of('.'),'1');
+		outfile=fopen(outfilename.c_str(),"wbx");
+	}
+	if(!outfile){
+		fclose(infile);
+		printf("Destination file opening error: %s\n",strerror(errno));
+		return 0;
+	}
 	written_bytes=fwrite(freq,sizeof(f_type),TABLE_SIZE,outfile);
 	if(written_bytes==0){
 		fclose(outfile);

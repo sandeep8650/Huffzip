@@ -5,21 +5,42 @@
  *******************************************
  */
 #include<cstdio>
+#include<cstring>
+#include<cerrno>
+#include<string>
 #include"huffzip.h"
 
 int decompress(char *filename){
 	int lastlen=0;
-	unsigned b,c;
+	string::size_type pos;
 	long size,cur_pos;
+	f_type freq[TABLE_SIZE]={0};
 	struct buffer buff={0,7};
 	TREE_INIT(root);
 	NODE_PTR(ptr);
-	string outfilename=string(filename)+"d";
-	f_type freq[TABLE_SIZE]={0};
+	string outfilename=string(filename);
+	if((pos=outfilename.rfind(extension))!=string::npos){
+		outfilename.erase(pos);
+	}
+	else{
+		printf("Unknown file type\n");
+		return 0;
+	}
 	FILE *infile=fopen(filename,"rb");
-	if(infile==NULL){return 0;}
-	FILE *outfile=fopen(outfilename.c_str(),"wb");
-	if(outfile==NULL){fclose(infile);return 1;}
+	if(!infile){
+		printf("Source file opening error: %s\n",strerror(errno));
+		return 0;
+	}
+	FILE *outfile=fopen(outfilename.c_str(),"wbx");
+	for(int i=1;i<=5 && !outfile;i++){
+		outfilename.insert(outfilename.begin()+outfilename.find_first_of('.'),'1');
+		outfile=fopen(outfilename.c_str(),"wbx");
+	}
+	if(!outfile){
+		fclose(infile);
+		printf("Destination file opening error: %s\n",strerror(errno));
+		return 0;
+	}
 	fread(freq,sizeof(f_type),TABLE_SIZE,infile);
 //	for(int i=0;i<TABLE_SIZE;i++){
 //		printf("freq[%d]=%u\n",i,freq[i]);
@@ -71,5 +92,5 @@ int decompress(char *filename){
 	fclose(outfile);
 	fclose(infile);
 	delete_tree(&root);
-	return 0;
+	return 1;
 }
