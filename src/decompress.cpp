@@ -33,7 +33,12 @@ int decompress(char *filename){
 	}
 	FILE *outfile=fopen(outfilename.c_str(),"wbx");
 	for(int i=1;i<=5 && !outfile;i++){
-		outfilename.insert(outfilename.begin()+outfilename.find_first_of('.'),'1');
+		if((pos=outfilename.find_first_of('.'))==string::npos){
+			outfilename.append(1,'1');
+		}
+		else{
+			outfilename.insert(outfilename.begin()+pos,'1');
+		}
 		outfile=fopen(outfilename.c_str(),"wbx");
 	}
 	if(!outfile){
