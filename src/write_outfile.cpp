@@ -10,15 +10,18 @@
 #include<string>
 #include"huffzip.h"
 
-f_type write_outfile(char *filename,f_type *freq,struct huffcode *codeTable,struct node *root){
-	f_type written_bytes=0;
+/* function to write compressed file
+ * @return: total number of written bytes to compressed file i.e. size of compressed file
+ */
+f_type write_outfile(char *filename,f_type *freq,struct huffcode *codeTable,struct node *root, f_type total_bytes){
+	f_type written_bytes=0,read_bytes=0;
 	NODE_PTR(ptr);
 	struct buffer buff={0,-1};
 	unsigned b;
 	string outfilename=string(filename) + extension;
 	FILE *infile=fopen(filename,"rb");
 	if(!infile){
-		printf("Source file opening error: %s\n",strerror(errno));
+		fprintf(stderr,"Source file opening error: %s\n",strerror(errno));
 		return 0;
 	}
 	FILE *outfile=fopen(outfilename.c_str(),"wbx");
@@ -28,7 +31,7 @@ f_type write_outfile(char *filename,f_type *freq,struct huffcode *codeTable,stru
 	}
 	if(!outfile){
 		fclose(infile);
-		printf("Destination file opening error: %s\n",strerror(errno));
+		fprintf(stderr,"Destination file opening error: %s\n",strerror(errno));
 		return 0;
 	}
 	written_bytes=fwrite(freq,sizeof(f_type),TABLE_SIZE,outfile);
@@ -38,24 +41,27 @@ f_type write_outfile(char *filename,f_type *freq,struct huffcode *codeTable,stru
 		return 0;
 	}
 	while((b=fgetc(infile))!=EOF){
+		read_bytes++;
 		for(int i=0;i<codeTable[b].length;i++){
 			buff.byte[++buff.top]=codeTable[b].code[i];
-			if(buff.top==7){
+			if(buff.top==7){//buffer is full, so write it to file
 				fputc(buff.byte.to_ulong(),outfile);
 				written_bytes++;
 				buff.byte=0;
 				buff.top=-1;
 			}
 		}
+		PROGRESS(read_bytes,total_bytes);
 	}
+	printf("\n");
 	if(buff.top!=-1){
 		written_bytes+=2;
 		fputc(buff.byte.to_ulong(),outfile);
-		fputc(buff.top + 1,outfile);
+		fputc(buff.top + 1,outfile);//this is length of code in last byte
 	}
 	else{
 		written_bytes++;
-		fputc(8,outfile);
+		fputc(8,outfile);//length of code in last byte is 8
 	}
 	fclose(infile);
 	fclose(outfile);

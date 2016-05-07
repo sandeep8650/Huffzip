@@ -7,6 +7,10 @@
 #include<cstring>
 #include"huffzip.h"
 
+/* function to fill codeTable
+ * @codeTable:
+ * @root: root pointer of huffman tree
+ */
 void create_code_table(struct huffcode *codeTable,struct node *root){
 	bitset<TABLE_SIZE> c(0);
 	memset(codeTable,0,sizeof(struct huffcode)*TABLE_SIZE);
@@ -20,8 +24,8 @@ void write_code_table(struct huffcode *codeTable,struct node *ptr,bitset<TABLE_S
 			codeTable[ptr->byte].length=l;
 		}
 		write_code_table(codeTable,ptr->left,c,l+1);
-		(*c).set(l);
+		(*c).set(l);//set bit number 'l' of c
 		write_code_table(codeTable,ptr->right,c,l+1);
-		(*c).reset(l);
+		(*c).reset(l); //reset bit number 'l' of c
 	}
 }

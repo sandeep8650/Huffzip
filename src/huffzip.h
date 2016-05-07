@@ -8,29 +8,44 @@
 
 using namespace std;
 
-#define TABLE_SIZE 256
+/* size of frequency table */
+#define TABLE_SIZE 256 //2^8
 
+/* @f_type: data type of frequency table array
+ */
 typedef unsigned int f_type;
 
+/* structure of node for huffman tree
+ */
 struct node{
 	unsigned byte;
 	f_type freq;
 	struct node *left;
 	struct node *right;
 };
+
+/* custom compare functor for priority queue
+ */
 struct compare{
   bool operator()(struct node *lhs, struct node *rhs) {
-    return lhs->freq > rhs->freq; //calls your operator
+    return lhs->freq > rhs->freq;
   }
 };
 
+/* structure for huffman code of character
+ */
 struct huffcode{
 	bitset<TABLE_SIZE> code;
 	int length;
 };
 
+/* size of buffer of bitset */
+#define BUFF_SIZE 8
+
+/* structure for buffer of bits
+ */
 struct buffer{
-	bitset<8> byte;
+	bitset<BUFF_SIZE> byte;
 	int top;
 };
 
@@ -60,15 +75,26 @@ const string extension=".hzip";
  */
 #define NODE_INIT(name,b,f,l,r) \
 	name->byte=b;name->freq=f;name->left=l;name->right=r
+
+/* macro for progress bar
+ * @i: completed
+ * @n: total
+ */
+#define BAR_SIZE 50
+#define PROGRESS(i,n) printf("["); \
+						for(f_type j=0;j<i*BAR_SIZE/n;j++){printf("#");} \
+						for(f_type j=i*BAR_SIZE/n;j<BAR_SIZE;j++){printf("_");} \
+						printf("]"); \
+						printf("\r")
 	
+/* prototype of all functions used */
 float compress(char *filename);
 int decompress(char *filename);
-int print_tree_preorder(struct node *ptr);
-f_type write_outfile(char *filename,f_type *freq,struct huffcode *codeTable,struct node *root);
+f_type write_outfile(char *filename,f_type *freq,struct huffcode *codeTable,struct node *root, f_type total_bytes);
 void create_code_table(struct huffcode *codeTable,struct node *root);
 void write_code_table(struct huffcode *codeTable,struct node *ptr,bitset<TABLE_SIZE> *c,int l);
 f_type count_frequency(f_type *freq, const char *filename);
 struct node* build_tree(f_type *freq);
 void delete_tree(struct node **ptr);
-
+int print_tree_preorder(struct node *ptr);
 

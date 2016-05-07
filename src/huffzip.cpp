@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
 	clock_t t1,t2;
 	double time;
 	if(argc!=3){
-		printf("Invalid Arguments\n");
+		fprintf(stderr,"USE: huffzip [option] [file]\nOption:\n-c to compress\n-d to decompress\n");
 		return 0;
 	}
 	if(strcmp(argv[1],"-c")==0){
@@ -19,7 +19,7 @@ int main(int argc, char *argv[]){
 		time=(double)(t2-t1)/CLOCKS_PER_SEC;
 		if(compression_ratio!=0){
 			printf("Compression ratio: %.2f%%\n",compression_ratio*100);
-			printf("Time taken for compression: %.2lf sec\n",time);
+			printf("Compression time: %.2lf sec\n",time);
 		}
 	}
 	else if(strcmp(argv[1],"-d")==0){
@@ -28,11 +28,12 @@ int main(int argc, char *argv[]){
 		t2=clock();
 		if(status){
 			time=(double)(t2-t1)/CLOCKS_PER_SEC;
-			printf("Time taken for decompression: %lf sec\n",time);
+			printf("Decompression time: %.2lf sec\n",time);
 		}
 	}
 	else{
-		printf("Invalid arguments\n");
+		fprintf(stderr,"Invalid arguments\n");
+		fprintf(stderr,"USE: huffzip [option] [file]\nOption:\n-c to compress\n-d to decompress\n");
 	}
 	
 	return 0;

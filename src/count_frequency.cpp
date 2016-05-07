@@ -9,20 +9,19 @@
 #include<cerrno>
 #include"huffzip.h"
 
-/* function for counting frequency of characters
- * in file filename.
- * @return: 0 if fail to open file "filename" else 1
- * @freq: array of type unsigned of size 256
- * @filename: char* to name of file in which characters to be count
+/* function for counting frequency of characters in a file.
+ * @return: 0 if fail to open file else total number of bytes in file
+ * @freq: (frequency table) array of type f_type of size of TABLE_SIZE i.e 256
+ * @filename: name of file in which characters to be count
  */
 f_type count_frequency(f_type *freq, const char *filename){
 	f_type total_bytes=0;
 	FILE *infile = fopen(filename,"rb");
 	if(!infile){
-		printf("Source file opening error: %s\n",strerror(errno));
+		fprintf(stderr,"Source file opening error: %s\n",strerror(errno));
 		return 0;
 	}
-	memset(freq,0,sizeof(f_type)*TABLE_SIZE);
+	memset(freq,0,sizeof(f_type)*TABLE_SIZE);//initialise frequency table with 0 entries
 	unsigned byte;
 	while( (byte=fgetc(infile))!=EOF ){
 		freq[byte]++;
