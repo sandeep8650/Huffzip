@@ -9,6 +9,7 @@
 
 /* function to compress file
  * @filename: name of file to be compress
+ * @return: compression ratio
  */
 float compress(char *filename){
 	f_type freq[TABLE_SIZE];
@@ -29,5 +30,5 @@ float compress(char *filename){
 	written_bytes=write_outfile(filename,freq,codeTable,root,total_bytes);//total number of written bytes on compressed file
 	if(!written_bytes){delete_tree(&root);return 0;}//if written_bytes=0 then delete tree and return 0
 	delete_tree(&root);
-	return (float)written_bytes/total_bytes;
+	return (float)(total_bytes-written_bytes)/total_bytes;
 }

@@ -12,7 +12,7 @@
  */
 int print_tree_preorder(struct node *ptr){
 	if(ptr!=NULL){
-		printf("%d\n",ptr->freq);
+		printf("%lu\n",ptr->freq);
 		print_tree_preorder(ptr->left);
 		print_tree_preorder(ptr->right);
 	}

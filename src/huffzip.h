@@ -13,7 +13,7 @@ using namespace std;
 
 /* @f_type: data type of frequency table array
  */
-typedef unsigned int f_type;
+typedef size_t f_type;
 
 /* structure of node for huffman tree
  */
@@ -85,7 +85,9 @@ const string extension=".hzip";
 						for(f_type j=0;j<i*BAR_SIZE/n;j++){printf("#");} \
 						for(f_type j=i*BAR_SIZE/n;j<BAR_SIZE;j++){printf("_");} \
 						printf("]"); \
-						printf("\r")
+						printf("%zu%%",i*100/n); \
+						printf("\r"); \
+						fflush(stdout)
 	
 /* prototype of all functions used */
 float compress(char *filename);
